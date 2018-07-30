@@ -12,20 +12,12 @@ namespace WebApplication7.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Resolution
+    public partial class AspNetUserLogin
     {
-        public Resolution()
-        {
-            this.Screens = new HashSet<Screen>();
-        }
+        public string LoginProvider { get; set; }
+        public string ProviderKey { get; set; }
+        public string UserId { get; set; }
     
-        public int ResolutionID { get; set; }
-        public double Width { get; set; }
-        public double Height { get; set; }
-        public string Note { get; set; }
-        public int BrandID { get; set; }
-    
-        public virtual Brand Brand { get; set; }
-        public virtual ICollection<Screen> Screens { get; set; }
+        public virtual AspNetUser AspNetUser { get; set; }
     }
 }

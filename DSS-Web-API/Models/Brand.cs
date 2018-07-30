@@ -16,10 +16,11 @@ namespace WebApplication7.Models
     {
         public Brand()
         {
+            this.AspNetUsers = new HashSet<AspNetUser>();
             this.Devices = new HashSet<Device>();
             this.Locations = new HashSet<Location>();
             this.MediaSrcs = new HashSet<MediaSrc>();
-            this.Playlists = new HashSet<Playlist>();
+            this.Resolutions = new HashSet<Resolution>();
             this.Scenarios = new HashSet<Scenario>();
         }
     
@@ -27,11 +28,13 @@ namespace WebApplication7.Models
         public string BrandName { get; set; }
         public string CreateDateTime { get; set; }
         public string Description { get; set; }
+        public Nullable<bool> isActive { get; set; }
     
+        public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
         public virtual ICollection<Device> Devices { get; set; }
         public virtual ICollection<Location> Locations { get; set; }
         public virtual ICollection<MediaSrc> MediaSrcs { get; set; }
-        public virtual ICollection<Playlist> Playlists { get; set; }
+        public virtual ICollection<Resolution> Resolutions { get; set; }
         public virtual ICollection<Scenario> Scenarios { get; set; }
     }
 }

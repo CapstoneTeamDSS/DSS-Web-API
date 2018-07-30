@@ -17,6 +17,7 @@ namespace WebApplication7.Models
         public Device()
         {
             this.DeviceScenarios = new HashSet<DeviceScenario>();
+            this.Schedules = new HashSet<Schedule>();
         }
     
         public int DeviceID { get; set; }
@@ -31,5 +32,6 @@ namespace WebApplication7.Models
         public virtual Brand Brand { get; set; }
         public virtual Screen Screen { get; set; }
         public virtual ICollection<DeviceScenario> DeviceScenarios { get; set; }
+        public virtual ICollection<Schedule> Schedules { get; set; }
     }
 }

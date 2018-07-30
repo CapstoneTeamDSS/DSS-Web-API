@@ -22,7 +22,7 @@ namespace WebApplication7.Models
         public int MediaSrcID { get; set; }
         public int BrandID { get; set; }
         public string Title { get; set; }
-        public Nullable<bool> Status { get; set; }
+        public Nullable<bool> isPublic { get; set; }
         public int TypeID { get; set; }
         public string URL { get; set; }
         public Nullable<System.DateTime> UpdateDatetime { get; set; }

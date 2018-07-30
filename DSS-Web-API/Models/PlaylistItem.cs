@@ -18,7 +18,7 @@ namespace WebApplication7.Models
         public int MediaSrcID { get; set; }
         public int PlaylistID { get; set; }
         public int DisplayOrder { get; set; }
-        public string Duration { get; set; }
+        public int Duration { get; set; }
     
         public virtual MediaSrc MediaSrc { get; set; }
         public virtual Playlist Playlist { get; set; }

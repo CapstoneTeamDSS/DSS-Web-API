@@ -12,20 +12,12 @@ namespace WebApplication7.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Resolution
+    public partial class sysdiagram
     {
-        public Resolution()
-        {
-            this.Screens = new HashSet<Screen>();
-        }
-    
-        public int ResolutionID { get; set; }
-        public double Width { get; set; }
-        public double Height { get; set; }
-        public string Note { get; set; }
-        public int BrandID { get; set; }
-    
-        public virtual Brand Brand { get; set; }
-        public virtual ICollection<Screen> Screens { get; set; }
+        public string name { get; set; }
+        public int principal_id { get; set; }
+        public int diagram_id { get; set; }
+        public Nullable<int> version { get; set; }
+        public byte[] definition { get; set; }
     }
 }

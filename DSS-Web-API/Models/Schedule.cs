@@ -12,20 +12,17 @@ namespace WebApplication7.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Resolution
+    public partial class Schedule
     {
-        public Resolution()
-        {
-            this.Screens = new HashSet<Screen>();
-        }
+        public int ScheduleID { get; set; }
+        public int DeviceID { get; set; }
+        public int ScenarioID { get; set; }
+        public int TimeFilter { get; set; }
+        public int LayoutID { get; set; }
+        public int Priority { get; set; }
+        public int DayFilter { get; set; }
     
-        public int ResolutionID { get; set; }
-        public double Width { get; set; }
-        public double Height { get; set; }
-        public string Note { get; set; }
-        public int BrandID { get; set; }
-    
-        public virtual Brand Brand { get; set; }
-        public virtual ICollection<Screen> Screens { get; set; }
+        public virtual Device Device { get; set; }
+        public virtual Scenario Scenario { get; set; }
     }
 }

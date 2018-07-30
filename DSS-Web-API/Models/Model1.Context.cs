@@ -26,6 +26,10 @@ namespace WebApplication7.Models
         }
     
         public DbSet<Area> Areas { get; set; }
+        public DbSet<AspNetRole> AspNetRoles { get; set; }
+        public DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+        public DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+        public DbSet<AspNetUser> AspNetUsers { get; set; }
         public DbSet<Box> Boxes { get; set; }
         public DbSet<Brand> Brands { get; set; }
         public DbSet<Device> Devices { get; set; }
@@ -39,6 +43,9 @@ namespace WebApplication7.Models
         public DbSet<Resolution> Resolutions { get; set; }
         public DbSet<Scenario> Scenarios { get; set; }
         public DbSet<ScenarioItem> ScenarioItems { get; set; }
+        public DbSet<Schedule> Schedules { get; set; }
         public DbSet<Screen> Screens { get; set; }
+        public DbSet<sysdiagram> sysdiagrams { get; set; }
+        public DbSet<TimeSlot> TimeSlots { get; set; }
     }
 }

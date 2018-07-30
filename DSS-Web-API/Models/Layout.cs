@@ -25,6 +25,8 @@ namespace WebApplication7.Models
         public string Description { get; set; }
         public string URL { get; set; }
         public bool isHorizontal { get; set; }
+        public string LayoutSrc { get; set; }
+        public Nullable<bool> isPublic { get; set; }
     
         public virtual ICollection<Area> Areas { get; set; }
         public virtual ICollection<Scenario> Scenarios { get; set; }

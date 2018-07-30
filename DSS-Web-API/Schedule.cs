@@ -9,9 +9,7 @@ namespace WebApplication7
     public class Schedule
     {   
         public int layoutId { get; set; }
-        public string title  { get; set; }
-        
-        public List<Area> areas { get; set; }
-         
+        public string title  { get; set; }        
+        public List<Area> areas { get; set; }         
     }
 }

@@ -12,20 +12,16 @@ namespace WebApplication7.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Resolution
+    public partial class AspNetRole
     {
-        public Resolution()
+        public AspNetRole()
         {
-            this.Screens = new HashSet<Screen>();
+            this.AspNetUsers = new HashSet<AspNetUser>();
         }
     
-        public int ResolutionID { get; set; }
-        public double Width { get; set; }
-        public double Height { get; set; }
-        public string Note { get; set; }
-        public int BrandID { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
     
-        public virtual Brand Brand { get; set; }
-        public virtual ICollection<Screen> Screens { get; set; }
+        public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
     }
 }
