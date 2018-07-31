@@ -25,7 +25,7 @@ namespace WebApplication7.Controllers
 
         public class ScenarioItem
         {
-            public int scenario_item_id { get; set; }
+            public int scenario_id { get; set; }
             public int playlist_id { get; set; }
             public int display_order_playlist { get; set; }
             public int area_id { get; set; }
@@ -66,6 +66,7 @@ namespace WebApplication7.Controllers
                 var scenario = db.Scenarios.Find(nextSchedule.ScenarioID, nextSchedule.LayoutID);
                 var scenarioItems = scenario.ScenarioItems.Select(a => new ScenarioItem
                 {
+                    scenario_id = a.ScenarioID,
                     playlist_id = a.Playlist.PlaylistID,
                     display_order_playlist = a.DisplayOrder,
                     area_id = a.AreaID,
