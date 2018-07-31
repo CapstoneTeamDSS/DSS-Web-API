@@ -49,45 +49,48 @@ namespace WebApplication7.Controllers
         {
             Scenario result = null;
             var box = db.Boxes.Find(boxId);
-            var currDateTime = DateTime.Now;
-            var currDateOfWeek = ((int)currDateTime.DayOfWeek)-1;
-            if (currDateOfWeek == -1)
+            var currDateTime = DateTime.Now.AddMinutes(30); //+=30mins vì gửi request trước thời gian chiếu 30 mins
+            var currDateOfWeek = 6 - ((int)currDateTime.DayOfWeek) + 1; //Monday:6; Tuesday: 5, ... Sunday: 0;
+            if (currDateOfWeek == 7)
             {
-                currDateOfWeek = 6;
+                currDateOfWeek = 0;
             }
             var currTime = currDateTime.Hour;
             var dayFilterPoint = (int)Math.Pow(2, currDateOfWeek); //Lấy số mũ theo ngày trong tuần, Mon -> Sun (0-6)
-            var timeFilterPoint = (int)Math.Pow(2, (int)(currTime / 24) * 6 + (currTime % 24) / 2); //Lấy số mũ theo time slot 
+            var timeFilterPoint = (int)Math.Pow(2, (int)Math.Floor((double)currTime / 2)); //Lấy số mũ theo time slot 
             var schedules = box.Devices.SelectMany(device => device.Schedules).Where(
-                schedule => ((schedule.DayFilter & dayFilterPoint) == dayFilterPoint) && ((schedule.TimeFilter & timeFilterPoint) == timeFilterPoint)).OrderBy(schedule => schedule.Priority).ToList();
-            var nextSchedule = schedules[0];
-            var scenario = db.Scenarios.Find(nextSchedule.ScenarioID, nextSchedule.LayoutID);
-            var scenarioItems = scenario.ScenarioItems.Select(a => new ScenarioItem
+                schedule => ((schedule.DayFilter & dayFilterPoint) == dayFilterPoint) && ((schedule.TimeFilter & timeFilterPoint) == timeFilterPoint)).OrderByDescending(schedule => schedule.Priority).ToList();
+            if (schedules != null)
             {
-                playlist_id = a.Playlist.PlaylistID,
-                display_order_playlist = a.DisplayOrder,
-                area_id = a.AreaID,
-                playlist_items = a.Playlist
-                 .PlaylistItems
-                 .Select(b => new PlaylistItem
-                 {
-                     playlist_item_id = b.PlaylistItemID,
-                     mediasrc_id = b.MediaSrc.MediaSrcID,
-                     display_order_media = b.DisplayOrder,
-                     duration = b.Duration,
-                     url_media = b.MediaSrc.URL,
-                     title_media = b.MediaSrc.Title,
-                     extension_media = b.MediaSrc.Extension,
-                     type_id = b.MediaSrc.TypeID
-                 }).ToList()
-            }).ToList();
-            result = new Scenario
-            {
-                layout_id = scenario.LayoutID,
-                scenario_id = scenario.ScenarioID,
-                scenario_title = scenario.Title,
-                scenario_items = scenarioItems,
-            };            
+                var nextSchedule = schedules[0];
+                var scenario = db.Scenarios.Find(nextSchedule.ScenarioID, nextSchedule.LayoutID);
+                var scenarioItems = scenario.ScenarioItems.Select(a => new ScenarioItem
+                {
+                    playlist_id = a.Playlist.PlaylistID,
+                    display_order_playlist = a.DisplayOrder,
+                    area_id = a.AreaID,
+                    playlist_items = a.Playlist
+                     .PlaylistItems
+                     .Select(b => new PlaylistItem
+                     {
+                         playlist_item_id = b.PlaylistItemID,
+                         mediasrc_id = b.MediaSrc.MediaSrcID,
+                         display_order_media = b.DisplayOrder,
+                         duration = b.Duration,
+                         url_media = b.MediaSrc.URL,
+                         title_media = b.MediaSrc.Title,
+                         extension_media = b.MediaSrc.Extension,
+                         type_id = b.MediaSrc.TypeID
+                     }).ToList()
+                }).ToList();
+                result = new Scenario
+                {
+                    layout_id = scenario.LayoutID,
+                    scenario_id = scenario.ScenarioID,
+                    scenario_title = scenario.Title,
+                    scenario_items = scenarioItems,
+                };
+            }
             return result;
         }
 
