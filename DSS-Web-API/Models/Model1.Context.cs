@@ -47,5 +47,6 @@ namespace WebApplication7.Models
         public DbSet<Screen> Screens { get; set; }
         public DbSet<sysdiagram> sysdiagrams { get; set; }
         public DbSet<TimeSlot> TimeSlots { get; set; }
+        public DbSet<VisualType> VisualTypes { get; set; }
     }
 }

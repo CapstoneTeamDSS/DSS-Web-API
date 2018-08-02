@@ -15,6 +15,13 @@ namespace WebApplication7.Controllers
         private DSSEntities db = new DSSEntities();
 
 
+        public class Schedule
+        {
+            public Scenario scenario { get; set; }
+            public int startTime { get; set; }
+            public int endTime { get; set; }
+        }
+
         public class Scenario
         {
             public int scenario_id { get; set; }
@@ -45,24 +52,28 @@ namespace WebApplication7.Controllers
 
         }
 
-        public Scenario GetNextScenario(int boxId)
+        public Schedule GetNextScenario(int boxId, bool preCall)
         {
-            Scenario result = null;
+            Schedule result = null;
             var box = db.Boxes.Find(boxId);
-            var currDateTime = DateTime.Now.AddMinutes(30); //+=30mins vì gửi request trước thời gian chiếu 30 mins
-            var currDateOfWeek = 6 - ((int)currDateTime.DayOfWeek) + 1; //Monday:6; Tuesday: 5, ... Sunday: 0;
+            var queryDateTime = DateTime.Now;
+            if (preCall)
+            {
+                queryDateTime = queryDateTime.AddMinutes(30); //+=30mins vì gửi request trước thời gian chiếu 30 mins
+            }
+            var currDateOfWeek = 6 - ((int)queryDateTime.DayOfWeek) + 1; //Monday:6; Tuesday: 5, ... Sunday: 0;
             if (currDateOfWeek == 7)
             {
                 currDateOfWeek = 0;
             }
-            var currTime = currDateTime.Hour;
+            var currTime = queryDateTime.Hour;
             var dayFilterPoint = (int)Math.Pow(2, currDateOfWeek); //Lấy số mũ theo ngày trong tuần, Mon -> Sun (0-6)
             var timeFilterPoint = (int)Math.Pow(2, (int)Math.Floor((double)currTime / 2)); //Lấy số mũ theo time slot 
-            var schedules = box.Devices.SelectMany(device => device.Schedules).Where(
-                schedule => ((schedule.DayFilter & dayFilterPoint) == dayFilterPoint) && ((schedule.TimeFilter & timeFilterPoint) == timeFilterPoint)).OrderByDescending(schedule => schedule.Priority).ToList();
-            if (schedules != null)
+            var nextSchedule = box.Devices.SelectMany(device => device.Schedules).Where(
+                schedule => ((schedule.DayFilter & dayFilterPoint) == dayFilterPoint) && ((schedule.TimeFilter & timeFilterPoint) == timeFilterPoint)).OrderByDescending(schedule => schedule.Priority).FirstOrDefault();
+            var currTimeSlot = db.TimeSlots.Select(slot => slot).Where(slot => (slot.StartTime <= queryDateTime.TimeOfDay && slot.EndTime >= queryDateTime.TimeOfDay)).FirstOrDefault();
+            if (nextSchedule!=null)
             {
-                var nextSchedule = schedules[0];
                 var scenario = db.Scenarios.Find(nextSchedule.ScenarioID, nextSchedule.LayoutID);
                 var scenarioItems = scenario.ScenarioItems.Select(a => new ScenarioItem
                 {
@@ -83,12 +94,18 @@ namespace WebApplication7.Controllers
                          type_id = b.MediaSrc.TypeID
                      }).ToList()
                 }).ToList();
-                result = new Scenario
+                var scenarioObj = new Scenario
                 {
                     layout_id = scenario.LayoutID,
                     scenario_id = scenario.ScenarioID,
                     scenario_title = scenario.Title,
                     scenario_items = scenarioItems,
+                };
+                result = new Schedule
+                {
+                    scenario = scenarioObj,
+                    startTime = (int)currTimeSlot.StartTime.TotalMilliseconds,
+                    endTime = (int)currTimeSlot.EndTime.TotalMilliseconds,
                 };
             }
             return result;

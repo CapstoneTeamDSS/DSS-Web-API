@@ -12,10 +12,18 @@ namespace WebApplication7.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class TimeSlot
+    public partial class VisualType
     {
-        public int SlotID { get; set; }
-        public System.TimeSpan StartTime { get; set; }
-        public System.TimeSpan EndTime { get; set; }
+        public VisualType()
+        {
+            this.Areas = new HashSet<Area>();
+            this.Playlists = new HashSet<Playlist>();
+        }
+    
+        public int VisualTypeID { get; set; }
+        public string TypeName { get; set; }
+    
+        public virtual ICollection<Area> Areas { get; set; }
+        public virtual ICollection<Playlist> Playlists { get; set; }
     }
 }

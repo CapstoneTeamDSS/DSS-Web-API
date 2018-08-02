@@ -21,6 +21,7 @@ namespace WebApplication7.Models
         public int TimeFilter { get; set; }
         public int DayFilter { get; set; }
         public int Priority { get; set; }
+        public bool isEnable { get; set; }
     
         public virtual Device Device { get; set; }
         public virtual Scenario Scenario { get; set; }

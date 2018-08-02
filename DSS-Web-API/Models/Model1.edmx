@@ -14,6 +14,7 @@
           <Property Name="LayoutID" Type="int" Nullable="false" />
           <Property Name="AreaCode" Type="varchar" MaxLength="5" Nullable="false" />
           <Property Name="URL" Type="varchar" MaxLength="150" />
+          <Property Name="VisualTypeID" Type="int" />
         </EntityType>
         <EntityType Name="AspNetRoles">
           <Key>
@@ -168,6 +169,7 @@
           <Property Name="Description" Type="text" />
           <Property Name="BrandID" Type="int" Nullable="false" />
           <Property Name="isPublic" Type="bit" />
+          <Property Name="VisualTypeID" Type="int" />
         </EntityType>
         <EntityType Name="PlaylistItem">
           <Key>
@@ -226,6 +228,7 @@
           <Property Name="TimeFilter" Type="int" Nullable="false" />
           <Property Name="DayFilter" Type="int" Nullable="false" />
           <Property Name="Priority" Type="int" Nullable="false" />
+          <Property Name="isEnable" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Screen">
           <Key>
@@ -248,15 +251,20 @@
           <Property Name="version" Type="int" />
           <Property Name="definition" Type="varbinary(max)" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'DSS.dbo.TimeSlot' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TimeSlot">
           <Key>
             <PropertyRef Name="SlotID" />
-            <PropertyRef Name="SlotDetail" />
           </Key>
           <Property Name="SlotID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="SlotDetail" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StartTime" Type="time" Precision="7" Nullable="false" />
+          <Property Name="EndTime" Type="time" Precision="7" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VisualType">
+          <Key>
+            <PropertyRef Name="VisualTypeID" />
+          </Key>
+          <Property Name="VisualTypeID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TypeName" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_Area_Layout">
           <End Role="Layout" Type="Self.Layout" Multiplicity="1" />
@@ -267,6 +275,18 @@ warning 6002: The table/view 'DSS.dbo.TimeSlot' does not have a primary key defi
             </Principal>
             <Dependent Role="Area">
               <PropertyRef Name="LayoutID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Area_VisualType">
+          <End Role="VisualType" Type="Self.VisualType" Multiplicity="0..1" />
+          <End Role="Area" Type="Self.Area" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VisualType">
+              <PropertyRef Name="VisualTypeID" />
+            </Principal>
+            <Dependent Role="Area">
+              <PropertyRef Name="VisualTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -448,6 +468,18 @@ warning 6002: The table/view 'DSS.dbo.TimeSlot' does not have a primary key defi
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Playlist_VisualType">
+          <End Role="VisualType" Type="Self.VisualType" Multiplicity="0..1" />
+          <End Role="Playlist" Type="Self.Playlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VisualType">
+              <PropertyRef Name="VisualTypeID" />
+            </Principal>
+            <Dependent Role="Playlist">
+              <PropertyRef Name="VisualTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PlaylistItem_MediaSrc">
           <End Role="MediaSrc" Type="Self.MediaSrc" Multiplicity="1" />
           <End Role="PlaylistItem" Type="Self.PlaylistItem" Multiplicity="*" />
@@ -621,14 +653,14 @@ warning 6002: The table/view 'DSS.dbo.TimeSlot' does not have a primary key defi
           <EntitySet Name="Schedule" EntityType="Self.Schedule" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Screen" EntityType="Self.Screen" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="TimeSlot" EntityType="Self.TimeSlot" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-[TimeSlot].[SlotID] AS [SlotID], 
-[TimeSlot].[SlotDetail] AS [SlotDetail]
-FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="TimeSlot" EntityType="Self.TimeSlot" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VisualType" EntityType="Self.VisualType" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Area_Layout" Association="Self.FK_Area_Layout">
             <End Role="Layout" EntitySet="Layout" />
+            <End Role="Area" EntitySet="Area" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Area_VisualType" Association="Self.FK_Area_VisualType">
+            <End Role="VisualType" EntitySet="VisualType" />
             <End Role="Area" EntitySet="Area" />
           </AssociationSet>
           <AssociationSet Name="FK_AspNetUsers_Brand" Association="Self.FK_AspNetUsers_Brand">
@@ -686,6 +718,10 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
           <AssociationSet Name="FK_MediaSrc_MediaType" Association="Self.FK_MediaSrc_MediaType">
             <End Role="MediaType" EntitySet="MediaType" />
             <End Role="MediaSrc" EntitySet="MediaSrc" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Playlist_VisualType" Association="Self.FK_Playlist_VisualType">
+            <End Role="VisualType" EntitySet="VisualType" />
+            <End Role="Playlist" EntitySet="Playlist" />
           </AssociationSet>
           <AssociationSet Name="FK_PlaylistItem_MediaSrc" Association="Self.FK_PlaylistItem_MediaSrc">
             <End Role="MediaSrc" EntitySet="MediaSrc" />
@@ -763,8 +799,13 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
           <EntitySet Name="Screens" EntityType="DSSModel.Screen" />
           <EntitySet Name="sysdiagrams" EntityType="DSSModel.sysdiagram" />
           <EntitySet Name="TimeSlots" EntityType="DSSModel.TimeSlot" />
+          <EntitySet Name="VisualTypes" EntityType="DSSModel.VisualType" />
           <AssociationSet Name="FK_Area_Layout" Association="DSSModel.FK_Area_Layout">
             <End Role="Layout" EntitySet="Layouts" />
+            <End Role="Area" EntitySet="Areas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Area_VisualType" Association="DSSModel.FK_Area_VisualType">
+            <End Role="VisualType" EntitySet="VisualTypes" />
             <End Role="Area" EntitySet="Areas" />
           </AssociationSet>
           <AssociationSet Name="FK_ScenarioItem_Area" Association="DSSModel.FK_ScenarioItem_Area">
@@ -843,6 +884,10 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
             <End Role="MediaSrc" EntitySet="MediaSrcs" />
             <End Role="PlaylistItem" EntitySet="PlaylistItems" />
           </AssociationSet>
+          <AssociationSet Name="FK_Playlist_VisualType" Association="DSSModel.FK_Playlist_VisualType">
+            <End Role="VisualType" EntitySet="VisualTypes" />
+            <End Role="Playlist" EntitySet="Playlists" />
+          </AssociationSet>
           <AssociationSet Name="FK_PlaylistItem_Playlist" Association="DSSModel.FK_PlaylistItem_Playlist">
             <End Role="Playlist" EntitySet="Playlists" />
             <End Role="PlaylistItem" EntitySet="PlaylistItems" />
@@ -877,7 +922,9 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
           <Property Name="LayoutID" Type="Int32" Nullable="false" />
           <Property Name="AreaCode" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Name="URL" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="VisualTypeID" Type="Int32" />
           <NavigationProperty Name="Layout" Relationship="DSSModel.FK_Area_Layout" FromRole="Area" ToRole="Layout" />
+          <NavigationProperty Name="VisualType" Relationship="DSSModel.FK_Area_VisualType" FromRole="Area" ToRole="VisualType" />
           <NavigationProperty Name="ScenarioItems" Relationship="DSSModel.FK_ScenarioItem_Area" FromRole="Area" ToRole="ScenarioItem" />
         </EntityType>
         <EntityType Name="AspNetRole">
@@ -1056,6 +1103,8 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="BrandID" Type="Int32" Nullable="false" />
           <Property Name="isPublic" Type="Boolean" />
+          <Property Name="VisualTypeID" Type="Int32" />
+          <NavigationProperty Name="VisualType" Relationship="DSSModel.FK_Playlist_VisualType" FromRole="Playlist" ToRole="VisualType" />
           <NavigationProperty Name="PlaylistItems" Relationship="DSSModel.FK_PlaylistItem_Playlist" FromRole="Playlist" ToRole="PlaylistItem" />
           <NavigationProperty Name="ScenarioItems" Relationship="DSSModel.FK_PlaylistScenarioArea_Playlist" FromRole="Playlist" ToRole="ScenarioItem" />
         </EntityType>
@@ -1128,6 +1177,7 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
           <Property Name="TimeFilter" Type="Int32" Nullable="false" />
           <Property Name="DayFilter" Type="Int32" Nullable="false" />
           <Property Name="Priority" Type="Int32" Nullable="false" />
+          <Property Name="isEnable" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Device" Relationship="DSSModel.FK_Schedule_Device" FromRole="Schedule" ToRole="Device" />
           <NavigationProperty Name="Scenario" Relationship="DSSModel.FK_Schedule_Scenario" FromRole="Schedule" ToRole="Scenario" />
         </EntityType>
@@ -1158,10 +1208,19 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
         <EntityType Name="TimeSlot">
           <Key>
             <PropertyRef Name="SlotID" />
-            <PropertyRef Name="SlotDetail" />
           </Key>
           <Property Name="SlotID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SlotDetail" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StartTime" Type="Time" Nullable="false" Precision="7" />
+          <Property Name="EndTime" Type="Time" Nullable="false" Precision="7" />
+        </EntityType>
+        <EntityType Name="VisualType">
+          <Key>
+            <PropertyRef Name="VisualTypeID" />
+          </Key>
+          <Property Name="VisualTypeID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TypeName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Areas" Relationship="DSSModel.FK_Area_VisualType" FromRole="VisualType" ToRole="Area" />
+          <NavigationProperty Name="Playlists" Relationship="DSSModel.FK_Playlist_VisualType" FromRole="VisualType" ToRole="Playlist" />
         </EntityType>
         <Association Name="FK_Area_Layout">
           <End Type="DSSModel.Layout" Role="Layout" Multiplicity="1" />
@@ -1172,6 +1231,18 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
             </Principal>
             <Dependent Role="Area">
               <PropertyRef Name="LayoutID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Area_VisualType">
+          <End Type="DSSModel.VisualType" Role="VisualType" Multiplicity="0..1" />
+          <End Type="DSSModel.Area" Role="Area" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VisualType">
+              <PropertyRef Name="VisualTypeID" />
+            </Principal>
+            <Dependent Role="Area">
+              <PropertyRef Name="VisualTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1411,6 +1482,18 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Playlist_VisualType">
+          <End Type="DSSModel.VisualType" Role="VisualType" Multiplicity="0..1" />
+          <End Type="DSSModel.Playlist" Role="Playlist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VisualType">
+              <PropertyRef Name="VisualTypeID" />
+            </Principal>
+            <Dependent Role="Playlist">
+              <PropertyRef Name="VisualTypeID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_PlaylistItem_Playlist">
           <End Type="DSSModel.Playlist" Role="Playlist" Multiplicity="1" />
           <End Type="DSSModel.PlaylistItem" Role="PlaylistItem" Multiplicity="*" />
@@ -1488,6 +1571,7 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
           <EntitySetMapping Name="Areas">
             <EntityTypeMapping TypeName="DSSModel.Area">
               <MappingFragment StoreEntitySet="Area">
+                <ScalarProperty Name="VisualTypeID" ColumnName="VisualTypeID" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
                 <ScalarProperty Name="AreaCode" ColumnName="AreaCode" />
                 <ScalarProperty Name="LayoutID" ColumnName="LayoutID" />
@@ -1644,6 +1728,7 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
           <EntitySetMapping Name="Playlists">
             <EntityTypeMapping TypeName="DSSModel.Playlist">
               <MappingFragment StoreEntitySet="Playlist">
+                <ScalarProperty Name="VisualTypeID" ColumnName="VisualTypeID" />
                 <ScalarProperty Name="isPublic" ColumnName="isPublic" />
                 <ScalarProperty Name="BrandID" ColumnName="BrandID" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -1701,6 +1786,7 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
           <EntitySetMapping Name="Schedules">
             <EntityTypeMapping TypeName="DSSModel.Schedule">
               <MappingFragment StoreEntitySet="Schedule">
+                <ScalarProperty Name="isEnable" ColumnName="isEnable" />
                 <ScalarProperty Name="Priority" ColumnName="Priority" />
                 <ScalarProperty Name="DayFilter" ColumnName="DayFilter" />
                 <ScalarProperty Name="TimeFilter" ColumnName="TimeFilter" />
@@ -1737,8 +1823,17 @@ FROM [dbo].[TimeSlot] AS [TimeSlot]</DefiningQuery>
           <EntitySetMapping Name="TimeSlots">
             <EntityTypeMapping TypeName="DSSModel.TimeSlot">
               <MappingFragment StoreEntitySet="TimeSlot">
-                <ScalarProperty Name="SlotDetail" ColumnName="SlotDetail" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
                 <ScalarProperty Name="SlotID" ColumnName="SlotID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VisualTypes">
+            <EntityTypeMapping TypeName="DSSModel.VisualType">
+              <MappingFragment StoreEntitySet="VisualType">
+                <ScalarProperty Name="TypeName" ColumnName="TypeName" />
+                <ScalarProperty Name="VisualTypeID" ColumnName="VisualTypeID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
