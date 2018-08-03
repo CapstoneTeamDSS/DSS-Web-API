@@ -36,6 +36,7 @@ namespace WebApplication7.Controllers
             public int playlist_id { get; set; }
             public int display_order_playlist { get; set; }
             public int area_id { get; set; }
+            public int visual_type_id { get; set; }
             public List<PlaylistItem> playlist_items { get; set; }
         }
 
@@ -81,6 +82,7 @@ namespace WebApplication7.Controllers
                     playlist_id = a.Playlist.PlaylistID,
                     display_order_playlist = a.DisplayOrder,
                     area_id = a.AreaID,
+                    visual_type_id = a.Area.VisualTypeID,
                     playlist_items = a.Playlist
                      .PlaylistItems
                      .Select(b => new PlaylistItem
