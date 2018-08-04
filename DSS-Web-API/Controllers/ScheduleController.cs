@@ -71,7 +71,7 @@ namespace WebApplication7.Controllers
             var dayFilterPoint = (int)Math.Pow(2, currDateOfWeek); //Lấy số mũ theo ngày trong tuần, Mon -> Sun (0-6)
             var timeFilterPoint = (int)Math.Pow(2, (int)Math.Floor((double)currTime / 2)); //Lấy số mũ theo time slot 
             var nextSchedule = box.Devices.SelectMany(device => device.Schedules).Where(
-                schedule => ((schedule.DayFilter & dayFilterPoint) == dayFilterPoint) && ((schedule.TimeFilter & timeFilterPoint) == timeFilterPoint)).OrderByDescending(schedule => schedule.Priority).FirstOrDefault();
+                schedule => ((schedule.isEnable==true) && (schedule.DayFilter & dayFilterPoint) == dayFilterPoint) && ((schedule.TimeFilter & timeFilterPoint) == timeFilterPoint)).OrderByDescending(schedule => schedule.Priority).FirstOrDefault();
             var currTimeSlot = db.TimeSlots.Select(slot => slot).Where(slot => (slot.StartTime <= queryDateTime.TimeOfDay && slot.EndTime >= queryDateTime.TimeOfDay)).FirstOrDefault();
             if (nextSchedule!=null)
             {
