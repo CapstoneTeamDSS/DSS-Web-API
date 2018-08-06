@@ -18,8 +18,8 @@ namespace WebApplication7.Controllers
         public class Schedule
         {
             public Scenario scenario { get; set; }
-            public int startTime { get; set; }
-            public int endTime { get; set; }
+            public int start_time { get; set; }
+            public int end_time { get; set; }
         }
 
         public class Scenario
@@ -107,8 +107,8 @@ namespace WebApplication7.Controllers
                 result = new Schedule
                 {
                     scenario = scenarioObj,
-                    startTime = (int)currTimeSlot.StartTime.TotalMilliseconds,
-                    endTime = (int)currTimeSlot.EndTime.TotalMilliseconds,
+                    start_time = (int)currTimeSlot.StartTime.TotalMilliseconds,
+                    end_time = (int)currTimeSlot.EndTime.TotalMilliseconds,
                 };
             }
             return result;
