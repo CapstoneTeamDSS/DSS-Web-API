@@ -67,7 +67,7 @@ namespace WebApplication7.Controllers
             {
                 currDateOfWeek = 0;
             }
-            var currTime = 11- (int)Math.Floor((double)queryDateTime.Hour/2); //0,1h->11; 2,3h->10,...,22,23h->0
+            var currTime = 11 - (int)Math.Floor((double)queryDateTime.Hour/2); //0,1h->11; 2,3h->10,...,22,23h->0
             var dayFilterPoint = (int)Math.Pow(2, currDateOfWeek); //Lấy số mũ theo ngày trong tuần, Mon -> Sun (0-6)
             var timeFilterPoint = (int)Math.Pow(2, (int)Math.Floor((double)currTime / 2)); //Lấy số mũ theo time slot 
             var nextSchedule = box.Devices.SelectMany(device => device.Schedules).Where(
