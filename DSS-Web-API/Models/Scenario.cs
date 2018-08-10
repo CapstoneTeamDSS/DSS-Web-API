@@ -27,6 +27,7 @@ namespace WebApplication7.Models
         public string Description { get; set; }
         public int BrandID { get; set; }
         public Nullable<bool> isPublic { get; set; }
+        public int AudioArea { get; set; }
     
         public virtual Brand Brand { get; set; }
         public virtual ICollection<DeviceScenario> DeviceScenarios { get; set; }

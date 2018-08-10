@@ -200,6 +200,7 @@
           <Property Name="Description" Type="text" />
           <Property Name="BrandID" Type="int" Nullable="false" />
           <Property Name="isPublic" Type="bit" />
+          <Property Name="AudioArea" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="ScenarioItem">
           <Key>
@@ -1139,6 +1140,7 @@
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="BrandID" Type="Int32" Nullable="false" />
           <Property Name="isPublic" Type="Boolean" />
+          <Property Name="AudioArea" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Brand" Relationship="DSSModel.FK_Scenario_Brand" FromRole="Scenario" ToRole="Brand" />
           <NavigationProperty Name="DeviceScenarios" Relationship="DSSModel.FK_DeviceScenario_Scenario" FromRole="Scenario" ToRole="DeviceScenario" />
           <NavigationProperty Name="Layout" Relationship="DSSModel.FK_Scenario_Layout" FromRole="Scenario" ToRole="Layout" />
@@ -1756,6 +1758,7 @@
           <EntitySetMapping Name="Scenarios">
             <EntityTypeMapping TypeName="DSSModel.Scenario">
               <MappingFragment StoreEntitySet="Scenario">
+                <ScalarProperty Name="AudioArea" ColumnName="AudioArea" />
                 <ScalarProperty Name="isPublic" ColumnName="isPublic" />
                 <ScalarProperty Name="BrandID" ColumnName="BrandID" />
                 <ScalarProperty Name="Description" ColumnName="Description" />

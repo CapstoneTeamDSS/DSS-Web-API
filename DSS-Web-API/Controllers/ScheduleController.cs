@@ -27,6 +27,7 @@ namespace WebApplication7.Controllers
             public int scenario_id { get; set; }
             public int layout_id { get; set; }
             public string scenario_title { get; set; }
+            public int audio_area { get; set; }
             public List<ScenarioItem> scenario_items { get; set; }
         }
 
@@ -103,6 +104,7 @@ namespace WebApplication7.Controllers
                     scenario_id = scenario.ScenarioID,
                     scenario_title = scenario.Title,
                     scenario_items = scenarioItems,
+                    audio_area = scenario.AudioArea,
                 };
                 result = new Schedule
                 {
