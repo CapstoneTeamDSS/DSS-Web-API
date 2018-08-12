@@ -28,7 +28,7 @@ namespace WebApplication7.Models
         public string BrandName { get; set; }
         public string CreateDateTime { get; set; }
         public string Description { get; set; }
-        public Nullable<bool> isActive { get; set; }
+        public bool isActive { get; set; }
     
         public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
         public virtual ICollection<Device> Devices { get; set; }

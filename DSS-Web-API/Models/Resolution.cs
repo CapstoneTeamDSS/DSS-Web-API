@@ -14,11 +14,6 @@ namespace WebApplication7.Models
     
     public partial class Resolution
     {
-        public Resolution()
-        {
-            this.Screens = new HashSet<Screen>();
-        }
-    
         public int ResolutionID { get; set; }
         public double Width { get; set; }
         public double Height { get; set; }
@@ -26,6 +21,5 @@ namespace WebApplication7.Models
         public int BrandID { get; set; }
     
         public virtual Brand Brand { get; set; }
-        public virtual ICollection<Screen> Screens { get; set; }
     }
 }

@@ -51,7 +51,7 @@ namespace WebApplication7.Controllers
             public string title_media { get; set; }
             public string extension_media { get; set; }
             public int type_id { get; set; }
-
+            public string security_hash { get; set; }
         }
 
         public Schedule GetNextScenario(int boxId, bool preCall)
@@ -95,7 +95,8 @@ namespace WebApplication7.Controllers
                          url_media = b.MediaSrc.URL,
                          title_media = b.MediaSrc.Title,
                          extension_media = b.MediaSrc.Extension,
-                         type_id = b.MediaSrc.TypeID
+                         type_id = b.MediaSrc.TypeID,
+                         security_hash = b.MediaSrc.SecurityHash,
                      }).ToList()
                 }).ToList();
                 var scenarioObj = new Scenario

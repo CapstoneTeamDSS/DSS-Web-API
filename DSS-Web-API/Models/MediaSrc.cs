@@ -29,6 +29,7 @@ namespace WebApplication7.Models
         public Nullable<System.DateTime> CreateDatetime { get; set; }
         public string Description { get; set; }
         public string Extension { get; set; }
+        public string SecurityHash { get; set; }
     
         public virtual Brand Brand { get; set; }
         public virtual MediaType MediaType { get; set; }

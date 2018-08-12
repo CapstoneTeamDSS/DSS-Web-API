@@ -56,7 +56,7 @@
           <Property Name="FullName" Type="nvarchar(max)" />
           <Property Name="Email" Type="nvarchar" MaxLength="256" />
           <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
-          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" Nullable="false" />
           <Property Name="SecurityStamp" Type="nvarchar(max)" />
           <Property Name="PhoneNumber" Type="nvarchar(max)" />
           <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
@@ -85,7 +85,7 @@
           <Property Name="BrandName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CreateDateTime" Type="nchar" MaxLength="10" />
           <Property Name="Description" Type="text" />
-          <Property Name="isActive" Type="bit" />
+          <Property Name="isActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Device">
           <Key>
@@ -149,6 +149,7 @@
           <Property Name="CreateDatetime" Type="datetime" />
           <Property Name="Description" Type="text" />
           <Property Name="Extension" Type="varchar" MaxLength="10" />
+          <Property Name="SecurityHash" Type="text" />
         </EntityType>
         <EntityType Name="MediaType">
           <Key>
@@ -235,7 +236,6 @@
           </Key>
           <Property Name="ScreenID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="LocationID" Type="int" Nullable="false" />
-          <Property Name="ResolutionID" Type="int" Nullable="false" />
           <Property Name="ScreenName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="text" />
           <Property Name="isHorizontal" Type="bit" Nullable="false" />
@@ -617,18 +617,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Screen_Resolution">
-          <End Role="Resolution" Type="Self.Resolution" Multiplicity="1" />
-          <End Role="Screen" Type="Self.Screen" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Resolution">
-              <PropertyRef Name="ResolutionID" />
-            </Principal>
-            <Dependent Role="Screen">
-              <PropertyRef Name="ResolutionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="DSSModelStoreContainer">
           <EntitySet Name="Area" EntityType="Self.Area" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -766,10 +754,6 @@
             <End Role="Location" EntitySet="Location" />
             <End Role="Screen" EntitySet="Screen" />
           </AssociationSet>
-          <AssociationSet Name="FK_Screen_Resolution" Association="Self.FK_Screen_Resolution">
-            <End Role="Resolution" EntitySet="Resolution" />
-            <End Role="Screen" EntitySet="Screen" />
-          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -895,10 +879,6 @@
             <End Role="Playlist" EntitySet="Playlists" />
             <End Role="ScenarioItem" EntitySet="ScenarioItems" />
           </AssociationSet>
-          <AssociationSet Name="FK_Screen_Resolution" Association="DSSModel.FK_Screen_Resolution">
-            <End Role="Resolution" EntitySet="Resolutions" />
-            <End Role="Screen" EntitySet="Screens" />
-          </AssociationSet>
           <AssociationSet Name="FK_ScenarioItem_Scenario" Association="DSSModel.FK_ScenarioItem_Scenario">
             <End Role="Scenario" EntitySet="Scenarios" />
             <End Role="ScenarioItem" EntitySet="ScenarioItems" />
@@ -961,7 +941,7 @@
           <Property Name="FullName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
-          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PasswordHash" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
@@ -996,7 +976,7 @@
           <Property Name="BrandName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CreateDateTime" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="isActive" Type="Boolean" />
+          <Property Name="isActive" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="AspNetUsers" Relationship="DSSModel.FK_AspNetUsers_Brand" FromRole="Brand" ToRole="AspNetUser" />
           <NavigationProperty Name="Devices" Relationship="DSSModel.FK_Device_Brand" FromRole="Brand" ToRole="Device" />
           <NavigationProperty Name="Locations" Relationship="DSSModel.FK_Location_Brand" FromRole="Brand" ToRole="Location" />
@@ -1078,6 +1058,7 @@
           <Property Name="CreateDatetime" Type="DateTime" Precision="3" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Extension" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="SecurityHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Brand" Relationship="DSSModel.FK_MediaSrc_Brand" FromRole="MediaSrc" ToRole="Brand" />
           <NavigationProperty Name="MediaType" Relationship="DSSModel.FK_MediaSrc_MediaType" FromRole="MediaSrc" ToRole="MediaType" />
           <NavigationProperty Name="PlaylistItems" Relationship="DSSModel.FK_PlaylistItem_MediaSrc" FromRole="MediaSrc" ToRole="PlaylistItem" />
@@ -1127,7 +1108,6 @@
           <Property Name="Note" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="BrandID" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Brand" Relationship="DSSModel.FK_Resolution_Brand" FromRole="Resolution" ToRole="Brand" />
-          <NavigationProperty Name="Screens" Relationship="DSSModel.FK_Screen_Resolution" FromRole="Resolution" ToRole="Screen" />
         </EntityType>
         <EntityType Name="Scenario">
           <Key>
@@ -1185,13 +1165,11 @@
           </Key>
           <Property Name="ScreenID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="LocationID" Type="Int32" Nullable="false" />
-          <Property Name="ResolutionID" Type="Int32" Nullable="false" />
           <Property Name="ScreenName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="isHorizontal" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Devices" Relationship="DSSModel.FK_Device_Screen" FromRole="Screen" ToRole="Device" />
           <NavigationProperty Name="Location" Relationship="DSSModel.FK_Screen_Location" FromRole="Screen" ToRole="Location" />
-          <NavigationProperty Name="Resolution" Relationship="DSSModel.FK_Screen_Resolution" FromRole="Screen" ToRole="Resolution" />
         </EntityType>
         <EntityType Name="sysdiagram">
           <Key>
@@ -1516,18 +1494,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Screen_Resolution">
-          <End Type="DSSModel.Resolution" Role="Resolution" Multiplicity="1" />
-          <End Type="DSSModel.Screen" Role="Screen" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Resolution">
-              <PropertyRef Name="ResolutionID" />
-            </Principal>
-            <Dependent Role="Screen">
-              <PropertyRef Name="ResolutionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ScenarioItem_Scenario">
           <End Type="DSSModel.Scenario" Role="Scenario" Multiplicity="1" />
           <End Type="DSSModel.ScenarioItem" Role="ScenarioItem" Multiplicity="*" />
@@ -1699,6 +1665,7 @@
           <EntitySetMapping Name="MediaSrcs">
             <EntityTypeMapping TypeName="DSSModel.MediaSrc">
               <MappingFragment StoreEntitySet="MediaSrc">
+                <ScalarProperty Name="SecurityHash" ColumnName="SecurityHash" />
                 <ScalarProperty Name="Extension" ColumnName="Extension" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="CreateDatetime" ColumnName="CreateDatetime" />
@@ -1800,7 +1767,6 @@
                 <ScalarProperty Name="isHorizontal" ColumnName="isHorizontal" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="ScreenName" ColumnName="ScreenName" />
-                <ScalarProperty Name="ResolutionID" ColumnName="ResolutionID" />
                 <ScalarProperty Name="LocationID" ColumnName="LocationID" />
                 <ScalarProperty Name="ScreenID" ColumnName="ScreenID" />
               </MappingFragment>
