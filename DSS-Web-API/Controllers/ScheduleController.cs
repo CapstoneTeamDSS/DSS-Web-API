@@ -28,6 +28,7 @@ namespace WebApplication7.Controllers
             public int layout_id { get; set; }
             public string scenario_title { get; set; }
             public int audio_area { get; set; }
+            public DateTime? update_datetime { get; set; }
             public List<ScenarioItem> scenario_items { get; set; }
         }
 
@@ -35,6 +36,7 @@ namespace WebApplication7.Controllers
         {
             public int scenario_id { get; set; }
             public int playlist_id { get; set; }
+            public DateTime? update_datetime { get; set; }
             public int display_order_playlist { get; set; }
             public int area_id { get; set; }
             public int visual_type_id { get; set; }
@@ -83,6 +85,7 @@ namespace WebApplication7.Controllers
                     playlist_id = a.Playlist.PlaylistID,
                     display_order_playlist = a.DisplayOrder,
                     area_id = a.AreaID,
+                    update_datetime = a.Playlist.UpdateDateTime,
                     visual_type_id = a.Area.VisualTypeID,
                     playlist_items = a.Playlist
                      .PlaylistItems
@@ -106,6 +109,7 @@ namespace WebApplication7.Controllers
                     scenario_title = scenario.Title,
                     scenario_items = scenarioItems,
                     audio_area = scenario.AudioArea,
+                    update_datetime = scenario.UpdateDateTime,
                 };
                 result = new Schedule
                 {

@@ -26,6 +26,7 @@ namespace WebApplication7.Models
         public int BrandID { get; set; }
         public Nullable<bool> isPublic { get; set; }
         public Nullable<int> VisualTypeID { get; set; }
+        public Nullable<System.DateTime> UpdateDateTime { get; set; }
     
         public virtual VisualType VisualType { get; set; }
         public virtual ICollection<PlaylistItem> PlaylistItems { get; set; }

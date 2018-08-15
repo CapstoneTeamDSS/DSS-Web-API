@@ -28,6 +28,7 @@ namespace WebApplication7.Models
         public int BrandID { get; set; }
         public Nullable<bool> isPublic { get; set; }
         public int AudioArea { get; set; }
+        public Nullable<System.DateTime> UpdateDateTime { get; set; }
     
         public virtual Brand Brand { get; set; }
         public virtual ICollection<DeviceScenario> DeviceScenarios { get; set; }

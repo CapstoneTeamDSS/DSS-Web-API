@@ -169,6 +169,7 @@
           <Property Name="BrandID" Type="int" Nullable="false" />
           <Property Name="isPublic" Type="bit" />
           <Property Name="VisualTypeID" Type="int" />
+          <Property Name="UpdateDateTime" Type="datetime" />
         </EntityType>
         <EntityType Name="PlaylistItem">
           <Key>
@@ -202,6 +203,7 @@
           <Property Name="BrandID" Type="int" Nullable="false" />
           <Property Name="isPublic" Type="bit" />
           <Property Name="AudioArea" Type="int" Nullable="false" />
+          <Property Name="UpdateDateTime" Type="datetime" />
         </EntityType>
         <EntityType Name="ScenarioItem">
           <Key>
@@ -1082,6 +1084,7 @@
           <Property Name="BrandID" Type="Int32" Nullable="false" />
           <Property Name="isPublic" Type="Boolean" />
           <Property Name="VisualTypeID" Type="Int32" />
+          <Property Name="UpdateDateTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="VisualType" Relationship="DSSModel.FK_Playlist_VisualType" FromRole="Playlist" ToRole="VisualType" />
           <NavigationProperty Name="PlaylistItems" Relationship="DSSModel.FK_PlaylistItem_Playlist" FromRole="Playlist" ToRole="PlaylistItem" />
           <NavigationProperty Name="ScenarioItems" Relationship="DSSModel.FK_PlaylistScenarioArea_Playlist" FromRole="Playlist" ToRole="ScenarioItem" />
@@ -1121,6 +1124,7 @@
           <Property Name="BrandID" Type="Int32" Nullable="false" />
           <Property Name="isPublic" Type="Boolean" />
           <Property Name="AudioArea" Type="Int32" Nullable="false" />
+          <Property Name="UpdateDateTime" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Brand" Relationship="DSSModel.FK_Scenario_Brand" FromRole="Scenario" ToRole="Brand" />
           <NavigationProperty Name="DeviceScenarios" Relationship="DSSModel.FK_DeviceScenario_Scenario" FromRole="Scenario" ToRole="DeviceScenario" />
           <NavigationProperty Name="Layout" Relationship="DSSModel.FK_Scenario_Layout" FromRole="Scenario" ToRole="Layout" />
@@ -1691,6 +1695,7 @@
           <EntitySetMapping Name="Playlists">
             <EntityTypeMapping TypeName="DSSModel.Playlist">
               <MappingFragment StoreEntitySet="Playlist">
+                <ScalarProperty Name="UpdateDateTime" ColumnName="UpdateDateTime" />
                 <ScalarProperty Name="VisualTypeID" ColumnName="VisualTypeID" />
                 <ScalarProperty Name="isPublic" ColumnName="isPublic" />
                 <ScalarProperty Name="BrandID" ColumnName="BrandID" />
@@ -1725,6 +1730,7 @@
           <EntitySetMapping Name="Scenarios">
             <EntityTypeMapping TypeName="DSSModel.Scenario">
               <MappingFragment StoreEntitySet="Scenario">
+                <ScalarProperty Name="UpdateDateTime" ColumnName="UpdateDateTime" />
                 <ScalarProperty Name="AudioArea" ColumnName="AudioArea" />
                 <ScalarProperty Name="isPublic" ColumnName="isPublic" />
                 <ScalarProperty Name="BrandID" ColumnName="BrandID" />
