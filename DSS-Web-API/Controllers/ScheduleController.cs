@@ -56,15 +56,11 @@ namespace WebApplication7.Controllers
             public string security_hash { get; set; }
         }
 
-        public Schedule GetNextScenario(int boxId, bool preCall)
+        public Schedule GetNextScenario(int boxId)
         {
             Schedule result = null;
             var box = db.Boxes.Find(boxId);
             var queryDateTime = DateTime.Now;
-            if (preCall)
-            {
-                queryDateTime = queryDateTime.AddMinutes(30); //+=30mins vì gửi request trước thời gian chiếu 30 mins
-            }
             var currDateOfWeek = 6 - ((int)queryDateTime.DayOfWeek) + 1; //Monday:6; Tuesday: 5, ... Sunday: 0;
             if (currDateOfWeek == 7)
             {
