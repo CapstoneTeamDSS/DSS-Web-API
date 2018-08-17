@@ -28,7 +28,7 @@ namespace WebApplication7.Controllers
             public int layout_id { get; set; }
             public string scenario_title { get; set; }
             public int audio_area { get; set; }
-            public DateTime? update_datetime { get; set; }
+            public long? scenario_update_datetime { get; set; }
             public List<ScenarioItem> scenario_items { get; set; }
         }
 
@@ -36,7 +36,7 @@ namespace WebApplication7.Controllers
         {
             public int scenario_id { get; set; }
             public int playlist_id { get; set; }
-            public DateTime? update_datetime { get; set; }
+            public long? playlist_update_datetime { get; set; }
             public int display_order_playlist { get; set; }
             public int area_id { get; set; }
             public int visual_type_id { get; set; }
@@ -70,13 +70,13 @@ namespace WebApplication7.Controllers
             {
                 currDateOfWeek = 0;
             }
-            var currTime = 11 - (int)Math.Floor((double)queryDateTime.Hour/2); //0,1h->11; 2,3h->10,...,22,23h->0
+            var currTime = 11 - (int)Math.Floor((double)queryDateTime.Hour / 2); //0,1h->11; 2,3h->10,...,22,23h->0
             var dayFilterPoint = (int)Math.Pow(2, currDateOfWeek); //Lấy số mũ theo ngày trong tuần, Mon -> Sun (0-6)
             var timeFilterPoint = (int)Math.Pow(2, currTime); //Lấy số mũ theo time slot 
             var nextSchedule = box.Devices.SelectMany(device => device.Schedules).Where(
-                schedule => ((schedule.isEnable==true) && (schedule.DayFilter & dayFilterPoint) == dayFilterPoint) && ((schedule.TimeFilter & timeFilterPoint) == timeFilterPoint)).OrderByDescending(schedule => schedule.Priority).FirstOrDefault();
+                schedule => ((schedule.isEnable == true) && (schedule.DayFilter & dayFilterPoint) == dayFilterPoint) && ((schedule.TimeFilter & timeFilterPoint) == timeFilterPoint)).OrderByDescending(schedule => schedule.Priority).FirstOrDefault();
             var currTimeSlot = db.TimeSlots.Select(slot => slot).Where(slot => (slot.StartTime <= queryDateTime.TimeOfDay && slot.EndTime >= queryDateTime.TimeOfDay)).FirstOrDefault();
-            if (nextSchedule!=null)
+            if (nextSchedule != null)
             {
                 var scenario = db.Scenarios.Find(nextSchedule.ScenarioID, nextSchedule.LayoutID);
                 var scenarioItems = scenario.ScenarioItems.Select(a => new ScenarioItem
@@ -85,7 +85,7 @@ namespace WebApplication7.Controllers
                     playlist_id = a.Playlist.PlaylistID,
                     display_order_playlist = a.DisplayOrder,
                     area_id = a.AreaID,
-                    update_datetime = a.Playlist.UpdateDateTime,
+                    playlist_update_datetime = ((DateTime) a.Playlist.UpdateDateTime).Ticks,
                     visual_type_id = a.Area.VisualTypeID,
                     playlist_items = a.Playlist
                      .PlaylistItems
@@ -102,6 +102,7 @@ namespace WebApplication7.Controllers
                          security_hash = b.MediaSrc.SecurityHash,
                      }).ToList()
                 }).ToList();
+                DateTime ScenarioDateTime = scenario.UpdateDateTime??DateTime.Now;
                 var scenarioObj = new Scenario
                 {
                     layout_id = scenario.LayoutID,
@@ -109,7 +110,7 @@ namespace WebApplication7.Controllers
                     scenario_title = scenario.Title,
                     scenario_items = scenarioItems,
                     audio_area = scenario.AudioArea,
-                    update_datetime = scenario.UpdateDateTime,
+                    scenario_update_datetime = ScenarioDateTime.Ticks,
                 };
                 result = new Schedule
                 {
