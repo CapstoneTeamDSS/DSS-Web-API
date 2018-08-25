@@ -22,6 +22,8 @@ namespace WebApplication7.Models
         }
     
         public string Id { get; set; }
+        public int BrandID { get; set; }
+        public string UserName { get; set; }
         public string FullName { get; set; }
         public string Email { get; set; }
         public bool EmailConfirmed { get; set; }
@@ -33,8 +35,6 @@ namespace WebApplication7.Models
         public Nullable<System.DateTime> LockoutEndDateUtc { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
-        public string UserName { get; set; }
-        public int BrandID { get; set; }
         public bool isActive { get; set; }
     
         public virtual ICollection<AspNetUserClaim> AspNetUserClaims { get; set; }
