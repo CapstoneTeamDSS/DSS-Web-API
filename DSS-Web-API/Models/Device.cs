@@ -27,6 +27,7 @@ namespace WebApplication7.Models
         public string Description { get; set; }
         public string Title { get; set; }
         public Nullable<int> BrandID { get; set; }
+        public string MatchingCode { get; set; }
     
         public virtual Box Box { get; set; }
         public virtual Brand Brand { get; set; }

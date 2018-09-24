@@ -56,10 +56,10 @@ namespace WebApplication7.Controllers
             public string security_hash { get; set; }
         }
 
-        public Schedule GetNextScenario(int boxId)
+        public Schedule GetNextScenario(string matchingCode)
         {
             Schedule result = null;
-            var box = db.Boxes.Find(boxId);
+            var currDevice = db.Devices.Select(device=>device).Where(d => d.MatchingCode.CompareTo(matchingCode)==0).FirstOrDefault();
             var queryDateTime = DateTime.Now;
             var currDateOfWeek = 6 - ((int)queryDateTime.DayOfWeek) + 1; //Monday:6; Tuesday: 5, ... Sunday: 0;
             if (currDateOfWeek == 7)
@@ -68,8 +68,8 @@ namespace WebApplication7.Controllers
             }
             var currTime = 11 - (int)Math.Floor((double)queryDateTime.Hour / 2); //0,1h->11; 2,3h->10,...,22,23h->0
             var dayFilterPoint = (int)Math.Pow(2, currDateOfWeek); //Lấy số mũ theo ngày trong tuần, Mon -> Sun (0-6)
-            var timeFilterPoint = (int)Math.Pow(2, currTime); //Lấy số mũ theo time slot 
-            var nextSchedule = box.Devices.SelectMany(device => device.Schedules).Where(
+            var timeFilterPoint = (int)Math.Pow(2, currTime); //Lấy số mũ theo time slot \
+            var nextSchedule = currDevice.Schedules.Select(schedule => schedule).Where(
                 schedule => ((schedule.isEnable == true) && (schedule.DayFilter & dayFilterPoint) == dayFilterPoint) && ((schedule.TimeFilter & timeFilterPoint) == timeFilterPoint)).OrderByDescending(schedule => schedule.Priority).ThenByDescending(schedule => schedule.ScheduleID).FirstOrDefault();
             var currTimeSlot = db.TimeSlots.Select(slot => slot).Where(slot => (slot.StartTime <= queryDateTime.TimeOfDay && slot.EndTime >= queryDateTime.TimeOfDay)).FirstOrDefault();
             if (nextSchedule != null)
